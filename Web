@@ -1,9 +1,10 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Project</title>
+    <title>Welcome to My Game</title>
     <style>
         * {
             margin: 0;
@@ -62,9 +63,9 @@
 <body>
 
     <div class="container">
-        <h1>Welcome!</h1>
-        <p>Click the button below to proceed to the main application page.</p>
-        <a href="https://karz-dev.github.io/x8Qm2vL7pR4k9zN3/" class="btn">Open Project</a>
+        <h1>Play the Game</h1>
+        <p>Click below to launch the game page.</p>
+        <a href="https://karz-dev.github.io/x8Qm2vL7pR4k9zN3/" class="btn">Play Now</a>
     </div>
 
 </body>
