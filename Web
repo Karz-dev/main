@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(30, 41, 59, 0.7);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #38bdf8;
+        }
+        p {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+        .btn:hover {
+            background-color: #0ea5e9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome!</h1>
+        <p>Click the button below to proceed to the main application page.</p>
+        <a href="https://karz-dev.github.io/x8Qm2vL7pR4k9zN3/" class="btn">Open Project</a>
+    </div>
+
+</body>
+</html>
