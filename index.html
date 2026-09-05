@@ -1,899 +1,795 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Arcade</title>
-
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            font-family:
-                'Segoe UI',
-                Tahoma,
-                Geneva,
-                Verdana,
-                sans-serif;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #0f172a,
-                    #1e293b
-                );
-
-            color: #f8fafc;
-
-            min-height: 100vh;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            padding: 2rem;
-        }
-
-
-        .container {
-
-            text-align: center;
-
-            background:
-                rgba(30, 41, 59, 0.7);
-
-            padding: 3rem;
-
-            border-radius: 16px;
-
-            box-shadow:
-                0 10px 25px
-                rgba(0, 0, 0, 0.3);
-
-            backdrop-filter: blur(10px);
-
-            max-width: 600px;
-
-            width: 100%;
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.1);
-        }
-
-
-        h1 {
-
-            font-size: 2.2rem;
-
-            margin-bottom: 0.5rem;
-
-            color: #38bdf8;
-        }
-
-
-        p {
-
-            color: #94a3b8;
-
-            margin-bottom: 2rem;
-
-            font-size: 1.05rem;
-        }
-
-
-        .grid {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(200px, 1fr)
-                );
-
-            gap: 1rem;
-        }
-
-
-        .btn {
-
-            display: block;
-
-            background-color: #38bdf8;
-
-            color: #0f172a;
-
-            padding: 0.8rem 1.5rem;
-
-            font-size: 1rem;
-
-            font-weight: bold;
-
-            text-decoration: none;
-
-            border-radius: 8px;
-
-            transition:
-                background-color 0.3s ease,
-                transform 0.2s ease;
-
-            box-shadow:
-                0 4px 12px
-                rgba(56, 189, 248, 0.3);
-
-            text-align: center;
-
-            border: none;
-
-            cursor: pointer;
-        }
-
-
-        .btn:hover {
-
-            background-color: #0ea5e9;
-
-            transform: translateY(-2px);
-        }
-
-
-        /* =========================
-           STATS BUTTON
-           ========================= */
-
-        .stats-btn {
-
-            background-color: #8b5cf6;
-
-            color: white;
-
-            box-shadow:
-                0 4px 12px
-                rgba(139, 92, 246, 0.3);
-        }
-
-
-        .stats-btn:hover {
-
-            background-color: #7c3aed;
-        }
-
-
-        /* =========================
-           STATS OVERLAY
-           ========================= */
-
-        .stats-overlay {
-
-            display: none;
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(0, 0, 0, 0.7);
-
-            backdrop-filter: blur(8px);
-
-            justify-content: center;
-
-            align-items: center;
-
-            padding: 20px;
-
-            z-index: 1000;
-        }
-
-
-        .stats-overlay.active {
-
-            display: flex;
-        }
-
-
-        /* =========================
-           STATS BOX
-           ========================= */
-
-        .stats-box {
-
-            background: #1e293b;
-
-            width: 100%;
-
-            max-width: 600px;
-
-            max-height: 85vh;
-
-            overflow-y: auto;
-
-            border-radius: 16px;
-
-            padding: 2rem;
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.1);
-
-            box-shadow:
-                0 20px 50px
-                rgba(0, 0, 0, 0.5);
-        }
-
-
-        .stats-header {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 1.5rem;
-        }
-
-
-        .stats-header h2 {
-
-            color: #a78bfa;
-        }
-
-
-        .close-btn {
-
-            background: none;
-
-            border: none;
-
-            color: #94a3b8;
-
-            font-size: 1.8rem;
-
-            cursor: pointer;
-        }
-
-
-        .close-btn:hover {
-
-            color: white;
-        }
-
-
-        /* =========================
-           STAT SECTIONS
-           ========================= */
-
-        .stat-section {
-
-            background:
-                rgba(15, 23, 42, 0.7);
-
-            border-radius: 12px;
-
-            padding: 1.2rem;
-
-            margin-bottom: 1rem;
-        }
-
-
-        .stat-section h3 {
-
-            color: #38bdf8;
-
-            margin-bottom: 1rem;
-        }
-
-
-        .stat-row {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            padding: 0.7rem 0;
-
-            border-bottom:
-                1px solid
-                rgba(255, 255, 255, 0.06);
-        }
-
-
-        .stat-row:last-child {
-
-            border-bottom: none;
-        }
-
-
-        .stat-name {
-
-            color: #e2e8f0;
-        }
-
-
-        .stat-number {
-
-            color: #38bdf8;
-
-            font-weight: bold;
-        }
-
-
-        .loading {
-
-            color: #94a3b8;
-
-            text-align: center;
-
-            padding: 1rem;
-        }
-
-
-        .error {
-
-            color: #f87171;
-
-            text-align: center;
-
-            padding: 1rem;
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Organiser</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #080b12;
+    --panel: #101521;
+    --panel2: #151b29;
+    --line: #232b3c;
+    --text: #f5f7fb;
+    --muted: #8e99ad;
+    --accent: #7c5cff;
+    --accent2: #5eead4;
+    --shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 75% 0%,
+            rgba(124, 92, 255, .13),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 10% 35%,
+            rgba(94, 234, 212, .06),
+            transparent 25%
+        ),
+        var(--bg);
+    color: var(--text);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    overflow-x: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.shell {
+    width: min(1240px, calc(100% - 40px));
+    margin: auto;
+    padding: 24px 0 42px;
+}
+
+/* TOP BAR */
+
+.topbar {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        var(--accent),
+        #9b8aff
+    );
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 20px;
+    box-shadow: 0 12px 30px rgba(124, 92, 255, .25);
+}
+
+.brand h1 {
+    font-size: 19px;
+    letter-spacing: -.3px;
+}
+
+.brand p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124, 92, 255, .18),
+            rgba(16, 21, 33, .96) 55%
+        );
+    box-shadow: var(--shadow);
+    padding: 42px;
+    margin-bottom: 24px;
+}
+
+.hero:after {
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 330px;
+    border-radius: 50%;
+    right: -80px;
+    top: -120px;
+    background:
+        radial-gradient(
+            circle,
+            rgba(124, 92, 255, .32),
+            transparent 68%
+        );
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 690px;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #c9c1ff;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 14px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent2);
+    box-shadow: 0 0 14px rgba(94, 234, 212, .8);
+}
+
+.hero h2 {
+    font-size: clamp(36px, 6vw, 66px);
+    line-height: .98;
+    letter-spacing: -3px;
+    margin-bottom: 18px;
+}
+
+.hero p {
+    color: #aeb7c9;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 600px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+/* BUTTONS */
+
+.btn {
+    border: 1px solid var(--line);
+    background: rgba(16, 21, 33, .75);
+    color: var(--text);
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: .2s;
+    backdrop-filter: blur(10px);
+}
+
+.btn:hover {
+    border-color: #39445b;
+    background: var(--panel2);
+    transform: translateY(-1px);
+}
+
+.btn.primary {
+    border-color: transparent;
+    background: var(--accent);
+    box-shadow: 0 10px 25px rgba(124, 92, 255, .22);
+}
+
+.btn.primary:hover {
+    background: #8a70ff;
+}
+
+/* APP SECTION */
+
+.content-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 34px 0 15px;
+}
+
+.content-head h3 {
+    font-size: 21px;
+    letter-spacing: -.5px;
+}
+
+.content-head p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.search {
+    width: min(310px, 100%);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    outline: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.search::placeholder {
+    color: #657087;
+}
+
+.search:focus {
+    border-color: #4b5874;
+}
+
+/* APP GRID */
+
+.apps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.card {
+    position: relative;
+    min-height: 190px;
+    background:
+        linear-gradient(
+            145deg,
+            var(--panel),
+            #0d121d
+        );
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: .22s;
+}
+
+.card:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(124, 92, 255, .11),
+            transparent 42%
+        );
+    opacity: 0;
+    transition: .22s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #39445b;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+}
+
+.card:hover:before {
+    opacity: 1;
+}
+
+.card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: #1b2231;
+    border: 1px solid #293247;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.card h4 {
+    font-size: 17px;
+    margin-top: 18px;
+}
+
+.card p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+    margin-top: 5px;
+}
+
+.open {
+    margin-top: 18px;
+    color: #bdb5ff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* FEATURED GOOGLE 2 */
+
+.feature {
+    grid-column: span 2;
+    min-height: 240px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124, 92, 255, .24),
+            rgba(21, 27, 41, .98) 62%
+        );
+}
+
+.feature .card-icon {
+    background: rgba(124, 92, 255, .2);
+    border-color: rgba(155, 138, 255, .35);
+    font-size: 24px;
+}
+
+.feature h4 {
+    font-size: 24px;
+    letter-spacing: -.8px;
+}
+
+.badge {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    font-weight: 900;
+    color: #d7d0ff;
+    background: rgba(124, 92, 255, .15);
+    border: 1px solid rgba(155, 138, 255, .25);
+    padding: 6px 8px;
+    border-radius: 999px;
+}
+
+/* NO RESULTS */
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 45px;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    border-radius: 18px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .apps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 620px) {
+
+    .shell {
+        width: min(100% - 24px, 1240px);
+        padding-top: 12px;
+    }
+
+    .topbar {
+        height: auto;
+    }
+
+    .brand p {
+        display: none;
+    }
+
+    .hero {
+        padding: 28px 24px;
+        min-height: 280px;
+        border-radius: 22px;
+    }
+
+    .hero h2 {
+        font-size: 43px;
+        letter-spacing: -2px;
+    }
+
+    .content-head {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .apps {
+        grid-template-columns: 1fr;
+    }
+
+    .feature {
+        grid-column: span 1;
+    }
+
+    .card {
+        min-height: 175px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
+<div class="shell">
 
-    <!-- =========================
-         MAIN WEBSITE
-         ========================= -->
+    <!-- HEADER -->
 
-    <div class="container">
+    <header class="topbar">
 
-        <h1>school organiser</h1>
+        <a class="brand" href="#">
+            <div class="brand-icon">S</div>
 
-        <p>school work apps</p>
+            <div>
+                <h1>School Organiser</h1>
+                <p>Your school stuff, in one place.</p>
+            </div>
+        </a>
 
-
-        <div class="grid">
-
-
-            <a
-                href="https://karz-dev.github.io/x8Qm2vL7pR4k9zN3/"
-                class="btn game-btn"
-                data-game="Google Docs"
-            >
-                Google Docs
-            </a>
+    </header>
 
 
-            <a
-                href="https://karz-dev.github.io/jK9sP2vL4mQx8RtY/"
-                class="btn game-btn"
-                data-game="Gmail"
-            >
-                Gmail
-            </a>
+    <!-- MAIN -->
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    <span class="dot"></span>
+                    School dashboard
+                </div>
+
+                <h2>
+                    Everything you need.<br>
+                    One click away.
+                </h2>
+
+                <p>
+                    Quick access to your school apps without
+                    digging through bookmarks. Pick an app below
+                    and get straight to it.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a
+                        class="btn primary"
+                        href="https://karz-dev.github.io/google-2/"
+                    >
+                        Open Google 2 →
+                    </a>
+
+                    <button
+                        class="btn"
+                        onclick="document.getElementById('apps').scrollIntoView({behavior:'smooth'})"
+                    >
+                        View all apps
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
 
 
-            <a
-                href="https://karz-dev.github.io/GDWAVE/"
-                class="btn game-btn"
-                data-game="Bromcom"
-            >
-                Bromcom
-            </a>
+        <!-- APPS -->
 
+        <section id="apps">
 
-            <a
-                href="https://karz-dev.github.io/agario/"
-                class="btn game-btn"
-                data-game="SUPER study app"
-            >
-                SUPER study app
-            </a>
+            <div class="content-head">
 
+                <div>
+                    <h3>Your apps</h3>
 
-            <button
-                class="btn stats-btn"
-                onclick="openStats()"
-            >
-                📊 Stats
-            </button>
+                    <p>
+                        Quick access to your most useful school tools.
+                    </p>
+                </div>
 
-
-        </div>
-
-    </div>
-
-
-
-    <!-- =========================
-         STATS WINDOW
-         ========================= -->
-
-    <div
-        class="stats-overlay"
-        id="statsOverlay"
-        onclick="closeStatsOutside(event)"
-    >
-
-
-        <div class="stats-box">
-
-
-            <div class="stats-header">
-
-                <h2>📊 Game Stats</h2>
-
-                <button
-                    class="close-btn"
-                    onclick="closeStats()"
+                <input
+                    class="search"
+                    id="search"
+                    type="search"
+                    placeholder="Search apps..."
+                    autocomplete="off"
                 >
-                    ×
-                </button>
 
             </div>
 
 
-            <!-- MOST PLAYED -->
+            <div class="apps" id="appGrid">
 
-            <div class="stat-section">
+                <!-- GOOGLE 2 -->
 
-                <h3>🎮 Most Played</h3>
+                <a
+                    class="card feature app-card"
+                    href="https://karz-dev.github.io/google-2/"
+                    data-name="google 2 google classroom school"
+                >
 
-                <div id="mostPlayed">
-
-                    <div class="loading">
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- UNIQUE BROWSERS -->
-
-            <div class="stat-section">
-
-                <h3>🌐 Browsers</h3>
-
-                <div id="browserCount">
-
-                    <div class="loading">
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-
-
-    <!-- =========================
-         SUPABASE LIBRARY
-         ========================= -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-    </script>
-
-
-
-    <script>
-
-
-        /* =========================
-           SUPABASE CONNECTION
-           ========================= */
-
-        const SUPABASE_URL =
-            "https://jgpuhvhdobcgeqesnxip.supabase.co";
-
-
-        /*
-         * PUT YOUR PUBLISHABLE KEY
-         * BETWEEN THESE QUOTES.
-         */
-
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_ZhqSNWqW-IZzaNZG_pMKgg_rqaVd4yq";
-
-
-        const supabaseClient =
-            supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
-            );
-
-
-
-        /* =========================
-           CREATE BROWSER ID
-           ========================= */
-
-        let browserID =
-            localStorage.getItem(
-                "schoolOrganiserBrowserID"
-            );
-
-
-        if (!browserID) {
-
-            browserID =
-                crypto.randomUUID();
-
-
-            localStorage.setItem(
-                "schoolOrganiserBrowserID",
-                browserID
-            );
-
-        }
-
-
-
-        /* =========================
-           TRACK GAME CLICKS
-           ========================= */
-
-        document
-            .querySelectorAll(".game-btn")
-            .forEach(button => {
-
-
-                button.addEventListener(
-                    "click",
-                    async function(event) {
-
-
-                        /*
-                         * Stop the page from opening
-                         * until the play is recorded.
-                         */
-
-                        event.preventDefault();
-
-
-                        const game =
-                            this.dataset.game;
-
-
-                        const destination =
-                            this.href;
-
-
-                        const { error } =
-                            await supabaseClient
-                                .from("game_plays")
-                                .insert({
-
-                                    browser_id:
-                                        browserID,
-
-                                    game:
-                                        game
-
-                                });
-
-
-                        if (error) {
-
-                            console.error(
-                                "Stats error:",
-                                error
-                            );
-
-                        }
-
-
-                        /*
-                         * Open the game.
-                         */
-
-                        window.location.href =
-                            destination;
-
-                    }
-
-                );
-
-            });
-
-
-
-        /* =========================
-           OPEN STATS
-           ========================= */
-
-        function openStats() {
-
-            document
-                .getElementById(
-                    "statsOverlay"
-                )
-                .classList
-                .add("active");
-
-
-            loadStats();
-
-        }
-
-
-
-        /* =========================
-           CLOSE STATS
-           ========================= */
-
-        function closeStats() {
-
-            document
-                .getElementById(
-                    "statsOverlay"
-                )
-                .classList
-                .remove("active");
-
-        }
-
-
-
-        /* =========================
-           CLOSE BY CLICKING OUTSIDE
-           ========================= */
-
-        function closeStatsOutside(event) {
-
-            if (
-                event.target.id ===
-                "statsOverlay"
-            ) {
-
-                closeStats();
-
-            }
-
-        }
-
-
-
-        /* =========================
-           LOAD STATS
-           ========================= */
-
-        async function loadStats() {
-
-
-            const mostPlayed =
-                document.getElementById(
-                    "mostPlayed"
-                );
-
-
-            const browserCount =
-                document.getElementById(
-                    "browserCount"
-                );
-
-
-            mostPlayed.innerHTML =
-                '<div class="loading">Loading...</div>';
-
-
-            browserCount.innerHTML =
-                '<div class="loading">Loading...</div>';
-
-
-
-            /* =========================
-               GET PLAYS FROM SUPABASE
-               ========================= */
-
-            const { data, error } =
-                await supabaseClient
-                    .from("game_plays")
-                    .select(
-                        "browser_id, game"
-                    );
-
-
-            if (error) {
-
-                console.error(
-                    "Could not load stats:",
-                    error
-                );
-
-
-                mostPlayed.innerHTML =
-                    `
-                    <div class="error">
-                        Stats unavailable.
-                    </div>
-                    `;
-
-
-                browserCount.innerHTML =
-                    `
-                    <div class="error">
-                        Stats unavailable.
-                    </div>
-                    `;
-
-
-                return;
-
-            }
-
-
-
-            /* =========================
-               COUNT GAME PLAYS
-               ========================= */
-
-            const gameCounts = {};
-
-
-            data.forEach(play => {
-
-
-                if (
-                    !gameCounts[play.game]
-                ) {
-
-                    gameCounts[play.game] =
-                        0;
-
-                }
-
-
-                gameCounts[play.game]++;
-
-            });
-
-
-
-            /* =========================
-               SORT MOST PLAYED
-               ========================= */
-
-            const sortedGames =
-                Object.entries(gameCounts)
-                    .sort(
-                        (a, b) =>
-                            b[1] - a[1]
-                    );
-
-
-
-            mostPlayed.innerHTML = "";
-
-
-
-            if (
-                sortedGames.length === 0
-            ) {
-
-                mostPlayed.innerHTML =
-                    `
-                    <div class="loading">
-
-                        No games played yet.
-
-                    </div>
-                    `;
-
-            }
-
-
-
-            sortedGames.forEach(
-                ([game, plays], index) => {
-
-
-                    const row =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    row.className =
-                        "stat-row";
-
-
-                    row.innerHTML = `
-
-                        <span class="stat-name">
-
-                            ${index + 1}.
-                            ${game}
-
-                        </span>
-
-
-                        <span class="stat-number">
-
-                            ${plays} plays
-
-                        </span>
-
-                    `;
-
-
-                    mostPlayed.appendChild(
-                        row
-                    );
-
-                }
-            );
-
-
-
-            /* =========================
-               COUNT UNIQUE BROWSERS
-               ========================= */
-
-            const uniqueBrowsers =
-                new Set(
-                    data.map(
-                        play =>
-                            play.browser_id
-                    )
-                );
-
-
-            browserCount.innerHTML = `
-
-                <div class="stat-row">
-
-                    <span class="stat-name">
-
-                        Unique browsers
-
+                    <span class="badge">
+                        Featured
                     </span>
 
+                    <div>
 
-                    <span class="stat-number">
+                        <div class="card-icon">
+                            G
+                        </div>
 
-                        ${uniqueBrowsers.size}
+                        <h4>
+                            Google 2
+                        </h4>
 
+                        <p>
+                            Your main Google-style school hub.
+                        </p>
+
+                    </div>
+
+                    <span class="open">
+                        Open app →
                     </span>
 
-                </div>
+                </a>
 
-            `;
 
+                <!-- GOOGLE DOCS -->
+
+                <a
+                    class="card app-card"
+                    href="https://karz-dev.github.io/x8Qm2vL7pR4k9zN3/"
+                    data-name="google docs documents writing"
+                >
+
+                    <div>
+
+                        <div class="card-icon">
+                            D
+                        </div>
+
+                        <h4>
+                            Google Docs
+                        </h4>
+
+                        <p>
+                            Write, edit and work on documents.
+                        </p>
+
+                    </div>
+
+                    <span class="open">
+                        Open app →
+                    </span>
+
+                </a>
+
+
+                <!-- GMAIL -->
+
+                <a
+                    class="card app-card"
+                    href="https://karz-dev.github.io/jK9sP2vL4mQx8RtY/"
+                    data-name="gmail email mail"
+                >
+
+                    <div>
+
+                        <div class="card-icon">
+                            @
+                        </div>
+
+                        <h4>
+                            Gmail
+                        </h4>
+
+                        <p>
+                            Check your school email and messages.
+                        </p>
+
+                    </div>
+
+                    <span class="open">
+                        Open app →
+                    </span>
+
+                </a>
+
+
+                <!-- BROMCOM -->
+
+                <a
+                    class="card app-card"
+                    href="https://karz-dev.github.io/GDWAVE/"
+                    data-name="bromcom school timetable homework"
+                >
+
+                    <div>
+
+                        <div class="card-icon">
+                            B
+                        </div>
+
+                        <h4>
+                            Bromcom
+                        </h4>
+
+                        <p>
+                            School information, timetable and more.
+                        </p>
+
+                    </div>
+
+                    <span class="open">
+                        Open app →
+                    </span>
+
+                </a>
+
+
+                <!-- SUPER STUDY -->
+
+                <a
+                    class="card app-card"
+                    href="https://karz-dev.github.io/agario/"
+                    data-name="super study app revision learning"
+                >
+
+                    <div>
+
+                        <div class="card-icon">
+                            ★
+                        </div>
+
+                        <h4>
+                            SUPER Study App
+                        </h4>
+
+                        <p>
+                            A quick place to get your studying done.
+                        </p>
+
+                    </div>
+
+                    <span class="open">
+                        Open app →
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+/* APP SEARCH */
+
+const search = document.getElementById("search");
+
+search.addEventListener("input", () => {
+
+    const query =
+        search.value
+            .trim()
+            .toLowerCase();
+
+    let shown = 0;
+
+    document
+        .querySelectorAll(".app-card")
+        .forEach(card => {
+
+            const match =
+                card.dataset.name.includes(query);
+
+            card.style.display =
+                match ? "flex" : "none";
+
+            if (match) {
+                shown++;
+            }
+
+        });
+
+
+    let empty =
+        document.querySelector(".empty");
+
+
+    if (!shown) {
+
+        if (!empty) {
+
+            empty =
+                document.createElement("div");
+
+            empty.className =
+                "empty";
+
+            empty.textContent =
+                "No apps found.";
+
+            document
+                .getElementById("appGrid")
+                .appendChild(empty);
         }
 
+    } else if (empty) {
 
-    </script>
+        empty.remove();
 
+    }
+
+});
+
+</script>
 
 </body>
-
 </html>
