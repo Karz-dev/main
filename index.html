@@ -216,7 +216,7 @@
 
             width: 100%;
 
-            max-width: 700px;
+            max-width: 600px;
 
             max-height: 85vh;
 
@@ -342,29 +342,6 @@
             text-align: center;
 
             padding: 1rem;
-        }
-
-
-        .individual-browser {
-
-            margin-bottom: 1rem;
-
-            padding: 1rem;
-
-            background:
-                rgba(30, 41, 59, 0.8);
-
-            border-radius: 10px;
-        }
-
-
-        .browser-name {
-
-            color: #a78bfa;
-
-            font-weight: bold;
-
-            margin-bottom: 0.5rem;
         }
 
 
@@ -494,30 +471,13 @@
             </div>
 
 
-            <!-- BROWSERS -->
+            <!-- UNIQUE BROWSERS -->
 
             <div class="stat-section">
 
                 <h3>🌐 Browsers</h3>
 
                 <div id="browserCount">
-
-                    <div class="loading">
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- INDIVIDUAL -->
-
-            <div class="stat-section">
-
-                <h3>👤 Individual</h3>
-
-                <div id="individualStats">
 
                     <div class="loading">
                         Loading...
@@ -535,12 +495,13 @@
 
 
     <!-- =========================
-         SUPABASE
+         SUPABASE LIBRARY
          ========================= -->
 
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
+
 
 
     <script>
@@ -555,8 +516,8 @@
 
 
         /*
-         * PASTE YOUR PUBLISHABLE KEY
-         * BETWEEN THE QUOTES BELOW.
+         * PUT YOUR PUBLISHABLE KEY
+         * BETWEEN THESE QUOTES.
          */
 
         const SUPABASE_PUBLISHABLE_KEY =
@@ -611,11 +572,8 @@
 
 
                         /*
-                         * Prevent the game from
-                         * opening immediately.
-                         *
-                         * This gives Supabase time
-                         * to save the play.
+                         * Stop the page from opening
+                         * until the play is recorded.
                          */
 
                         event.preventDefault();
@@ -654,8 +612,7 @@
 
 
                         /*
-                         * Open the game after
-                         * recording the play.
+                         * Open the game.
                          */
 
                         window.location.href =
@@ -674,7 +631,6 @@
            ========================= */
 
         function openStats() {
-
 
             document
                 .getElementById(
@@ -696,7 +652,6 @@
 
         function closeStats() {
 
-
             document
                 .getElementById(
                     "statsOverlay"
@@ -709,12 +664,10 @@
 
 
         /* =========================
-           CLOSE WHEN CLICKING
-           OUTSIDE THE BOX
+           CLOSE BY CLICKING OUTSIDE
            ========================= */
 
         function closeStatsOutside(event) {
-
 
             if (
                 event.target.id ===
@@ -730,7 +683,7 @@
 
 
         /* =========================
-           LOAD ALL STATS
+           LOAD STATS
            ========================= */
 
         async function loadStats() {
@@ -748,12 +701,6 @@
                 );
 
 
-            const individualStats =
-                document.getElementById(
-                    "individualStats"
-                );
-
-
             mostPlayed.innerHTML =
                 '<div class="loading">Loading...</div>';
 
@@ -762,25 +709,20 @@
                 '<div class="loading">Loading...</div>';
 
 
-            individualStats.innerHTML =
-                '<div class="loading">Loading...</div>';
-
-
 
             /* =========================
-               GET DATABASE DATA
+               GET PLAYS FROM SUPABASE
                ========================= */
 
             const { data, error } =
                 await supabaseClient
                     .from("game_plays")
                     .select(
-                        "browser_id, game, played_at"
+                        "browser_id, game"
                     );
 
 
             if (error) {
-
 
                 console.error(
                     "Could not load stats:",
@@ -804,14 +746,6 @@
                     `;
 
 
-                individualStats.innerHTML =
-                    `
-                    <div class="error">
-                        Stats unavailable.
-                    </div>
-                    `;
-
-
                 return;
 
             }
@@ -819,7 +753,7 @@
 
 
             /* =========================
-               MOST PLAYED
+               COUNT GAME PLAYS
                ========================= */
 
             const gameCounts = {};
@@ -843,6 +777,11 @@
             });
 
 
+
+            /* =========================
+               SORT MOST PLAYED
+               ========================= */
+
             const sortedGames =
                 Object.entries(gameCounts)
                     .sort(
@@ -851,7 +790,9 @@
                     );
 
 
+
             mostPlayed.innerHTML = "";
+
 
 
             if (
@@ -861,11 +802,14 @@
                 mostPlayed.innerHTML =
                     `
                     <div class="loading">
+
                         No games played yet.
+
                     </div>
                     `;
 
             }
+
 
 
             sortedGames.forEach(
@@ -911,7 +855,7 @@
 
 
             /* =========================
-               UNIQUE BROWSERS
+               COUNT UNIQUE BROWSERS
                ========================= */
 
             const uniqueBrowsers =
@@ -944,7 +888,7 @@
 
             `;
 
-
+        }
 
 
     </script>
